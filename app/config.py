@@ -37,6 +37,9 @@ class Settings(BaseSettings):
     retrieval_k: int = 6
     retrieval_min_score: float = 0.35          # below this, the filtered search falls back to unfiltered
 
+    # Branding on the generated DOCX (the past proposals are from this firm)
+    firm_name: str = "empowrd.ai"
+
     log_level: str = "INFO"
 
     def ensure_dirs(self) -> None:

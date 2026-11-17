@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     # Tried in order when a model is overloaded (503) or too slow; keeps the bot answering during demand spikes
     llm_fallback_models: str = "gemini-3.6-flash,gemini-3.5-flash-lite"
     embed_model: str = "gemini-embedding-001"
-    llm_timeout_s: int = 60
+    llm_timeout_s: int = 30
 
     @property
     def fallback_models(self) -> list[str]:

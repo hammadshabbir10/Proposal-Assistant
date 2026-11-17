@@ -1,0 +1,274 @@
+{
+ "company": {
+  "value": "Brightline Retail Group",
+  "status": "present",
+  "evidence": [
+   {
+    "speaker": "Header",
+    "text": "Company: Brightline Retail Group; Date: May 14, 2026; Participants: Sarah Okafor (Consultant), Marcus Webb (CEO, Brightline), Jenny Tran (Operations Manager, Brightline)",
+    "turn": 1
+   }
+  ],
+  "alternatives": [],
+  "note": null
+ },
+ "industry": {
+  "value": "Retail and warehouse distribution",
+  "status": "present",
+  "evidence": [
+   {
+    "speaker": "Marcus",
+    "text": "So we've been running for about eight years, three warehouse locations — Chicago, Dallas, and we just opened one in Phoenix last year.",
+    "turn": 3
+   },
+   {
+    "speaker": "Jenny",
+    "text": "The inventory side specifically.",
+    "turn": 4
+   }
+  ],
+  "alternatives": [],
+  "note": null
+ },
+ "problem": {
+  "value": "The backend inventory and reporting systems are outdated, siloed across multiple warehouse locations, and rely heavily on manual spreadsheets, causing daily communication issues and double-allocated inventory.",
+  "status": "present",
+  "evidence": [
+   {
+    "speaker": "Marcus",
+    "text": "But the backend operations are a mess and we know it.",
+    "turn": 3
+   },
+   {
+    "speaker": "Jenny",
+    "text": "Right now we have the three warehouses and they basically don't talk to each other. If someone in Chicago wants to know what's in Dallas they're literally calling each other on the phone.",
+    "turn": 4
+   },
+   {
+    "speaker": "Jenny",
+    "text": "We're doing everything in spreadsheets. I spend probably four to five hours every Monday just compiling a weekly ops report that should take twenty minutes if we had decent tooling.",
+    "turn": 9
+   }
+  ],
+  "alternatives": [],
+  "note": null
+ },
+ "goals": {
+  "value": "Have all five locations visible in one place in real time, eliminate phone calls between warehouses, and free up the operations team to focus on actual problems rather than compiling data.",
+  "status": "present",
+  "evidence": [
+   {
+    "speaker": "Marcus",
+    "text": "All five locations visible in one place, in real time. No more phone calls between warehouses, and my ops team spending their time on actual problems instead of just compiling data.",
+    "turn": 12
+   }
+  ],
+  "alternatives": [],
+  "note": null
+ },
+ "budget": {
+  "value": "Targeting $50,000 with flexibility up to $120,000 if the approach and scope warrant it.",
+  "status": "conflicting",
+  "evidence": [
+   {
+    "speaker": "Marcus",
+    "text": "We've set aside fifty thousand for this. That's the number I got signed off on by the board. Fifty.",
+    "turn": 17
+   },
+   {
+    "speaker": "Jenny",
+    "text": "Actually Marcus, I thought we discussed up to a hundred and twenty? The board approved a range, not a fixed number. I have the email if you want me to pull it up.",
+    "turn": 18
+   },
+   {
+    "speaker": "Marcus",
+    "text": "Fair point. Sarah, let's say the target is fifty but there's flexibility if the approach is right. Does that make sense?",
+    "turn": 21
+   }
+  ],
+  "alternatives": [
+   "50000 fixed starting point",
+   "Up to 120000 range"
+  ],
+  "note": "Marcus initially stated a fixed budget of $50,000 approved by the board, while Jenny stated the board approved a range up to $120,000. They agreed to target $50,000 with flexibility if needed."
+ },
+ "timeline": {
+  "value": "Targeting Q3 for the system to be stable, with Q4 as the confirmed fallback before opening Atlanta in Q1 next year.",
+  "status": "conflicting",
+  "evidence": [
+   {
+    "speaker": "Marcus",
+    "text": "Realistically before we open Atlanta. So that's... we're targeting Q1 next year for Atlanta. So I guess we'd need the system stable by end of Q3 this year? That's roughly five months from now.",
+    "turn": 25
+   },
+   {
+    "speaker": "Jenny",
+    "text": "That might be tight. I've been saying Q4 is probably more realistic. Q3 only works if we start immediately and nothing goes sideways.",
+    "turn": 26
+   },
+   {
+    "speaker": "Marcus",
+    "text": "Yeah, Q3 is the goal but Q4 is where we'd actually land probably.",
+    "turn": 27
+   }
+  ],
+  "alternatives": [
+   "End of Q3 this year",
+   "Q4 this year"
+  ],
+  "note": "Marcus states Q3 is the goal, but both agree Q4 is where they will likely land."
+ },
+ "stakeholders": [
+  {
+   "name": "Sarah Okafor",
+   "role": "Consultant",
+   "organisation": null,
+   "influence": "Consultant / facilitator",
+   "evidence": [
+    {
+     "speaker": "Header",
+     "text": "Participants: Sarah Okafor (Consultant)",
+     "turn": 1
+    }
+   ]
+  },
+  {
+   "name": "Marcus Webb",
+   "role": "CEO",
+   "organisation": "Brightline Retail Group",
+   "influence": "Decision maker",
+   "evidence": [
+    {
+     "speaker": "Header",
+     "text": "Marcus Webb (CEO, Brightline)",
+     "turn": 1
+    }
+   ]
+  },
+  {
+   "name": "Jenny Tran",
+   "role": "Operations Manager",
+   "organisation": "Brightline Retail Group",
+   "influence": "Daily user / operations owner",
+   "evidence": [
+    {
+     "speaker": "Header",
+     "text": "Jenny Tran (Operations Manager, Brightline)",
+     "turn": 1
+    }
+   ]
+  },
+  {
+   "name": "Raj",
+   "role": "Developer / In-house technical staff",
+   "organisation": "Brightline Retail Group",
+   "influence": "Technical owner / maintains existing system",
+   "evidence": [
+    {
+     "speaker": "Marcus",
+     "text": "We have one guy, Raj. He keeps the existing system running. He's good but he's not going to be building something new from scratch.",
+     "turn": 15
+    }
+   ]
+  }
+ ],
+ "integrations": [
+  {
+   "value": "QuickBooks",
+   "status": "present",
+   "evidence": [
+    {
+     "speaker": "Jenny",
+     "text": "We use QuickBooks for finance. That's non-negotiable, it has to talk to QuickBooks.",
+     "turn": 29
+    }
+   ],
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "value": "Shopify",
+   "status": "present",
+   "evidence": [
+    {
+     "speaker": "Jenny",
+     "text": "And we're on Shopify for the direct-to-consumer side, that's maybe 20% of our volume but it matters.",
+     "turn": 29
+    }
+   ],
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "value": "Shipping software",
+   "status": "ambiguous",
+   "evidence": [
+    {
+     "speaker": "Marcus",
+     "text": "And if it could connect to whatever shipping software we end up using that would be ideal but we haven't picked one yet so that's more of a future thing.",
+     "turn": 30
+    }
+   ],
+   "alternatives": [
+    "Future shipping software integration to be determined"
+   ],
+   "note": "Client has not yet selected a shipping software, making this a future consideration."
+  }
+ ],
+ "constraints": [
+  {
+   "value": "Must work with what they currently have as much as possible; completely ripping everything out and starting over has been explicitly rejected.",
+   "status": "present",
+   "evidence": [
+    {
+     "speaker": "Marcus",
+     "text": "We're not interested in that. We want something that works with what we have as much as possible.",
+     "turn": 32
+    }
+   ],
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "value": "Must avoid creating morale problems for internal developer Raj by throwing away everything he built.",
+   "status": "present",
+   "evidence": [
+    {
+     "speaker": "Jenny",
+     "text": "That's important. Raj built parts of the current system himself. If we tell him everything he built is being thrown away that's going to be a morale problem.",
+     "turn": 33
+    }
+   ],
+   "alternatives": [],
+   "note": null
+  },
+  {
+   "value": "The solution must be usable by the operations team without requiring a developer for daily tasks.",
+   "status": "present",
+   "evidence": [
+    {
+     "speaker": "Jenny",
+     "text": "I'd add — the system needs to be something my team can actually use. We've had consultants come in before and build things that were technically impressive but required a developer to do anything in them. That doesn't work for us.",
+     "turn": 13
+    }
+   ],
+   "alternatives": [],
+   "note": null
+  }
+ ],
+ "out_of_scope": [
+  {
+   "value": "Staff scheduling piece",
+   "status": "present",
+   "evidence": [
+    {
+     "speaker": "Marcus",
+     "text": "And the staff scheduling piece is also getting complicated with five sites but honestly that's lower priority right now. If you can fix the inventory and the reporting we'd be happy.",
+     "turn": 10
+    }
+   ],
+   "alternatives": [],
+   "note": "Lower priority compared to inventory and reporting."
+  }
+ ]
+}

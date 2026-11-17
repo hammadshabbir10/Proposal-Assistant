@@ -75,6 +75,8 @@ class ResearchPack(BaseModel):
     used_fallback: bool = Field(description="True if the industry filter returned too little and the search was widened")
     by_section: dict[str, list[RetrievedChunk]] = Field(default_factory=dict)
     reference_outlines: dict[str, list[str]] = Field(default_factory=dict, description="doc_id -> its section titles, in order")
+    rationale: str = Field(default="", description="The agent's own account of which references matter and why")
+    auto_filled: list[str] = Field(default_factory=list, description="Section types the agent did not search, filled by code")
 
 
 # ---------- Writer / Editor ----------

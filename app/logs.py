@@ -8,6 +8,7 @@ def setup_logging(level: str = "INFO") -> None:
     logging.basicConfig(format="%(message)s", level=level)
     for noisy in ("httpx", "httpcore", "google_genai", "google_genai.models", "chromadb"):
         logging.getLogger(noisy).setLevel(logging.WARNING)
+    logging.getLogger("google_genai.models").setLevel(logging.ERROR)  # "AFC is enabled" notices on every tool call
     structlog.configure(
         processors=[
             structlog.contextvars.merge_contextvars,

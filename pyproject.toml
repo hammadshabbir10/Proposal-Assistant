@@ -1,0 +1,37 @@
+[project]
+name = "proposal-assistant"
+version = "0.1.0"
+description = "Slack multi-agent assistant that turns client discovery transcripts into proposal DOCX files"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "slack-bolt>=1.21",
+    "slack-sdk>=3.33",
+    "aiohttp>=3.10",
+    "langgraph>=0.2.60",
+    "langgraph-checkpoint-sqlite>=2.0",
+    "google-genai>=1.0",
+    "chromadb>=0.5.20",
+    "sqlalchemy>=2.0",
+    "pydantic>=2.8",
+    "pydantic-settings>=2.4",
+    "python-docx>=1.1",
+    "tenacity>=9.0",
+    "structlog>=24.4",
+    "rapidfuzz>=3.9",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.3", "pytest-asyncio>=0.24"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["app*"]

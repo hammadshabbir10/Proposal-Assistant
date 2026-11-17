@@ -6,6 +6,8 @@ import structlog
 
 def setup_logging(level: str = "INFO") -> None:
     logging.basicConfig(format="%(message)s", level=level)
+    for noisy in ("httpx", "httpcore", "google_genai", "google_genai.models", "chromadb"):
+        logging.getLogger(noisy).setLevel(logging.WARNING)
     structlog.configure(
         processors=[
             structlog.contextvars.merge_contextvars,

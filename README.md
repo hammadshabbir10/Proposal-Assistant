@@ -273,7 +273,12 @@ python -m scripts.demo_cli say "make the timeline section more detailed"
 python -m scripts.demo_cli approve
 ```
 
-To start over, delete `var/state.db`, `var/graph.db` and `var/output/` (keep `var/chroma/`, the indexed proposals).
+To start over with a clean history, stop the bot, then delete the sessions and the uploaded transcripts' vectors (the indexed proposals are kept):
+
+```bash
+python -c "import chromadb; chromadb.PersistentClient('var/chroma').delete_collection('transcripts')"
+rm var/state.db var/graph.db; rm -r var/output        # Windows: del var\state.db var\graph.db & rmdir /s /q var\output
+```
 
 ## 14. Tests
 

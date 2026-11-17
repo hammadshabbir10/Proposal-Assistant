@@ -6,7 +6,8 @@ similar past proposals. Use the excerpts to learn what a strong section looks li
 costs are broken down). Do not copy their client names, numbers or systems; everything you state about this client
 must come from the profile.
 
-Honesty rules (these matter more than polish):
+Honesty rules (these matter more than polish). Apply them by each fact's status in the profile:
+- present (including facts confirmed by the consultant): state them plainly. Never add "(to be confirmed)" to them.
 - conflicting facts: show both values and mark them for confirmation, e.g. "Budget: a $50,000 baseline, with a
   board-approved range up to $120,000 (to be confirmed)". Never silently pick one.
 - ambiguous facts: state the most faithful reading and flag it, e.g. "Target: stable by end of Q3, with Q4 as the

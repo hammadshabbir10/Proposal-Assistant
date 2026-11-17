@@ -106,6 +106,16 @@ class ProposalSection(Base):
     proposal: Mapped[Proposal] = relationship(back_populates="sections")
 
 
+class ResearchPackRow(Base):
+    """The Research agent's output, kept so a later revision writes from the same references as the draft."""
+    __tablename__ = "research_packs"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    session_id: Mapped[int] = mapped_column(ForeignKey("sessions.id"))
+    pack_json: Mapped[dict] = mapped_column(JSON)
+    created_at: Mapped[datetime] = mapped_column(default=utcnow)
+
+
 class Message(Base):
     """Conversation memory, so follow-ups the next day have context."""
     __tablename__ = "messages"

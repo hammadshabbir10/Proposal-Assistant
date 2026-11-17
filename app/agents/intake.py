@@ -9,6 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from pydantic import BaseModel, Field
 from rapidfuzz import fuzz
 
 from app import llm
@@ -39,13 +40,15 @@ class IntakeResult:
 def combine_transcripts(raw_texts: list[str]) -> list[Turn]:
     """Merge every transcript in the session into one numbered list of turns (later uploads continue the numbering)."""
     turns: list[Turn] = []
+    spoken = 0  # turn numbers count spoken lines only, matching the transcript search used by Q&A
     for raw in raw_texts:
         header, ts = parse_transcript(raw)
-        if header:  # company, date, participants with job titles: kept as a quotable line, not a speaker
+        if header:  # company, date, participants with job titles: quotable, but not a numbered turn
             info = "; ".join(f"{k.title()}: {v}" for k, v in header.items())
-            turns.append(Turn(index=len(turns) + 1, speaker="Header", text=info))
+            turns.append(Turn(index=0, speaker="Header", text=info))
         for t in ts:
-            turns.append(Turn(index=len(turns) + 1, speaker=t.speaker, text=t.text))
+            spoken += 1
+            turns.append(Turn(index=spoken, speaker=t.speaker, text=t.text))
     return turns
 
 
@@ -132,6 +135,41 @@ def run_intake(raw_texts: list[str], session_id: int | None = None) -> IntakeRes
     log.info("intake.done", model=r.model, quotes=rep.quotes_checked, removed=len(rep.quotes_removed),
              downgraded=rep.fields_downgraded)
     return IntakeResult(profile=profile, report=rep, turns=turns, profile_version=version)
+
+
+class _Resolution(BaseModel):
+    field: str = Field(description="One of: company, industry, problem, goals, budget, timeline")
+    value: str = Field(description="What the proposal should state, in the consultant's terms")
+
+
+class _Resolutions(BaseModel):
+    resolutions: list[_Resolution] = Field(default_factory=list)
+
+
+def apply_consultant_answers(profile: ClientProfile, answers: str, session_id: int | None = None) -> ClientProfile:
+    """The consultant's reply in Slack settles open fields. Settled fields become present, with the consultant's
+    words as evidence (marked as coming from Slack, not the transcript). Fields the reply does not mention stay open."""
+    issues = profile.open_issues()
+    if not issues or not answers.strip():
+        return profile
+    listing = "\n".join(f"- {n}: {f.status.value}; {f.note or ''} alternatives={f.alternatives}" for n, f in issues)
+    prompt = (f"Open fields in a client profile:\n{listing}\n\nThe consultant replied:\n{answers}\n\n"
+              "Return a resolution only for fields the reply clearly settles.")
+    r = llm.generate_structured(prompt, _Resolutions, tier="fast", temperature=0,
+                                system="You map a consultant's answers onto the open fields they settle. Never invent values.")
+    data = profile.model_dump()
+    open_names = {n for n, _ in issues}
+    for res in r.parsed.resolutions:
+        if res.field not in open_names:
+            continue
+        data[res.field] = ExtractedField(value=res.value, status=FieldStatus.present,
+                                         evidence=[Quote(speaker="Consultant (Slack)", text=answers.strip()[:300])],
+                                         note="Confirmed by the consultant in Slack").model_dump()
+    updated = ClientProfile.model_validate(data)
+    if session_id:
+        repo.save_profile(session_id, updated)
+    repo.log_agent_run("intake_answers", session_id=session_id, model=r.model, output=r.parsed.model_dump())
+    return updated
 
 
 def clarification_questions(profile: ClientProfile) -> list[tuple[str, FieldStatus, str]]:

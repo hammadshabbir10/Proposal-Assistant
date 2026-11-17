@@ -187,7 +187,8 @@ def render_proposal(*, title: str, client: str, sections: list[dict], version: i
 def render_from_db(proposal, client: str, prepared_for: str | None = None) -> Path:
     """Render a stored Proposal row (with its sections) to var/output/<client>_Proposal_v<N>.docx."""
     safe = re.sub(r"[^A-Za-z0-9]+", "_", client).strip("_") or "Client"
-    out = get_settings().output_dir / f"{safe}_Proposal_v{proposal.version}.docx"
+    # one folder per session, so two sessions (or a copy open in Word) never fight over the same file name
+    out = get_settings().output_dir / f"session_{proposal.session_id}" / f"{safe}_Proposal_v{proposal.version}.docx"
     secs = [{"key": x.key, "title": x.title, "section_type": x.section_type, "content_md": x.content_md}
             for x in sorted(proposal.sections, key=lambda x: x.order_idx)]
     return render_proposal(title=proposal.outline_json.get("title", "Proposal"), client=client, sections=secs,

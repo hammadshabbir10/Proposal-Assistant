@@ -9,7 +9,7 @@ from sqlalchemy.exc import IntegrityError
 
 from app.config import get_settings
 from app.db import models as m
-from app.schemas import ClientProfile, Outline, SectionDraft
+from app.schemas import ClientProfile, Outline, ResearchPack, SectionDraft
 
 
 @lru_cache
@@ -161,6 +161,40 @@ def _load_proposal(s, proposal_id: int) -> m.Proposal:
     p = s.get(m.Proposal, proposal_id)
     _ = list(p.sections)  # load sections before the session closes
     return p
+
+
+# ---------- research packs ----------
+
+def save_pack(session_id: int, pack: ResearchPack) -> None:
+    with db() as s:
+        s.add(m.ResearchPackRow(session_id=session_id, pack_json=pack.model_dump(mode="json")))
+        s.commit()
+
+
+def latest_pack(session_id: int) -> ResearchPack | None:
+    with db() as s:
+        row = s.scalar(select(m.ResearchPackRow).where(m.ResearchPackRow.session_id == session_id)
+                       .order_by(m.ResearchPackRow.id.desc()).limit(1))
+        return ResearchPack.model_validate(row.pack_json) if row else None
+
+
+def get_session(session_id: int) -> m.Session | None:
+    with db() as s:
+        return s.get(m.Session, session_id)
+
+
+def session_summary(session_id: int) -> dict:
+    """Small status view used by the /sessions endpoint and the Router's context."""
+    with db() as s:
+        sess = s.get(m.Session, session_id)
+        if sess is None:
+            return {}
+        n_tr = s.scalar(select(func.count()).select_from(m.Transcript).where(m.Transcript.session_id == session_id))
+        prop = s.scalar(select(m.Proposal).where(m.Proposal.session_id == session_id).order_by(m.Proposal.version.desc()).limit(1))
+        runs = s.scalar(select(func.count()).select_from(m.AgentRun).where(m.AgentRun.session_id == session_id))
+        return {"session_id": session_id, "status": sess.status, "transcripts": n_tr,
+                "proposal_version": prop.version if prop else None, "proposal_status": prop.status if prop else None,
+                "sections": [x.title for x in prop.sections] if prop else [], "agent_runs": runs}
 
 
 # ---------- memory, tracing, idempotency ----------

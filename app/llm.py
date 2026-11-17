@@ -76,8 +76,29 @@ def _is_retryable(e: Exception) -> bool:
     return "timeout" in name or "connect" in name or "remoteprotocol" in name
 
 
+CHAIN_ROUNDS = 2          # if every model is busy, wait and walk the chain once more before giving up
+ROUND_WAIT_S = 20
+
+
 def _call(tier: str, contents: Any, config: types.GenerateContentConfig) -> tuple[Any, str, int]:
-    """Run one generate_content call through the fallback chain. Returns (response, model, latency_ms)."""
+    """Run one generate_content call through the fallback chain, in up to CHAIN_ROUNDS rounds."""
+    last: Exception | None = None
+    for rnd in range(CHAIN_ROUNDS):
+        if rnd:
+            log.warning("llm.all_busy_waiting", wait_s=ROUND_WAIT_S)
+            time.sleep(ROUND_WAIT_S)
+            _cooldown_until.clear()  # second round: give every model another chance
+        try:
+            return _call_chain(tier, contents, config)
+        except LLMError as e:
+            last = e
+            if not isinstance(e.__cause__, Exception) or not _is_retryable(e.__cause__):
+                raise
+    raise last  # type: ignore[misc]
+
+
+def _call_chain(tier: str, contents: Any, config: types.GenerateContentConfig) -> tuple[Any, str, int]:
+    """One pass over the fallback chain. Returns (response, model, latency_ms)."""
     last: Exception | None = None
     for model in _chain(tier):
         for attempt in range(1, ATTEMPTS_PER_MODEL + 1):

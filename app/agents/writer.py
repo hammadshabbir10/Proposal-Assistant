@@ -100,16 +100,24 @@ def write_section(sec: OutlineSection, outline: Outline, profile: ClientProfile,
     return draft
 
 
+FAILED_TEXT = "[TBD: this section could not be generated. Ask me to regenerate it.]"
+
+
 def write_all(outline: Outline, profile: ClientProfile, pack: ResearchPack, session_id: int | None = None) -> list[SectionDraft]:
-    def one(sec: OutlineSection) -> SectionDraft:
+    def one(sec: OutlineSection) -> SectionDraft | None:
         try:
             return write_section(sec, outline, profile, pack, session_id=session_id)
         except llm.LLMError as e:  # one failed section must not lose the whole document
             log.warning("writer.section_failed", key=sec.key, error=str(e)[:120])
-            return SectionDraft(key=sec.key, title=sec.title,
-                                content_md="[TBD: this section could not be generated. Ask me to regenerate it.]")
+            repo.log_agent_run("writer_section", session_id=session_id, error=f"{sec.key}: {e}"[:500])
+            return None
     with ThreadPoolExecutor(max_workers=PARALLEL) as ex:
-        return list(ex.map(one, outline.sections))
+        drafts = list(ex.map(one, outline.sections))
+    # second chance, one at a time: failures are almost always a model briefly overloaded during the parallel burst
+    for i, (sec, d) in enumerate(zip(outline.sections, drafts)):
+        if d is None:
+            drafts[i] = one(sec) or SectionDraft(key=sec.key, title=sec.title, content_md=FAILED_TEXT)
+    return drafts
 
 
 def generate(profile: ClientProfile, pack: ResearchPack, session_id: int | None = None) -> tuple[Outline, list[SectionDraft]]:

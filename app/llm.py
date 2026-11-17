@@ -50,8 +50,11 @@ def client() -> genai.Client:
     global _client
     if _client is None:
         s = get_settings()
+        # attempts=1 turns off the SDK's own hidden retries: our fallback chain decides what happens on failure,
+        # otherwise an overloaded model is retried silently for minutes before we can move on
         _client = genai.Client(api_key=s.gemini_api_key,
-                               http_options=types.HttpOptions(timeout=s.llm_timeout_s * 1000))
+                               http_options=types.HttpOptions(timeout=s.llm_timeout_s * 1000,
+                                                              retry_options=types.HttpRetryOptions(attempts=1)))
     return _client
 
 

@@ -18,9 +18,9 @@ class Settings(BaseSettings):
     llm_model_strong: str = "gemini-3.8-flash"        # intake, writer, editor
     llm_model_fast: str = "gemini-3.1-flash-lite"     # router, metadata tagging
     # Tried in order when a model is overloaded (503) or too slow; keeps the bot answering during demand spikes
-    llm_fallback_models: str = "gemini-3.6-flash,gemini-3.5-flash-lite"
+    llm_fallback_models: str = "gemini-3.5-flash-lite,gemini-3.1-flash-lite"
     embed_model: str = "gemini-embedding-001"
-    llm_timeout_s: int = 30
+    llm_timeout_s: int = 45
 
     @property
     def fallback_models(self) -> list[str]:
